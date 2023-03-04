@@ -1,9 +1,19 @@
 import instaloader
- 
+from instaloader import TwoFactorAuthRequiredException
+import stdiomask
+import os
+
 
 def login_loader(username: str, password: str):
     loader = instaloader.Instaloader()
-    loader.login(username, password)
+    try:
+        loader.login(username, password)
+    except TwoFactorAuthRequiredException:
+        os.system('cls')
+        print("2FA does not work on instaloader (bug). You'll have to disable it for now\n")
+        main()
+        # twofa = input('Insert your 2FA code: ')
+        # loader.two_factor_login(twofa)
     return loader
 
 
@@ -36,7 +46,7 @@ def get_unfollowers(followers: list, followed: list):
 
 def main():
     login = input('Enter your Instagram username: ')
-    pw = input('Enter your password: ')
+    pw = stdiomask.getpass('Enter your password: ')
     loader = login_loader(login, pw)
     profile = get_profile(login, loader)
     followed = get_followed(profile)
